@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Grade;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;

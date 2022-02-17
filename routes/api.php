@@ -2,6 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\BookBorrowController;
+use App\Http\Controllers\BookReturnController;
+use App\Http\Controllers\BookBorrowDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/Book', [BookController::class, 'show']);
+Route::get('/Book',[BookController::class, 'show']);
 Route::get('/Book/{id}', [BookController::class, 'detail']);
 Route::post('/Book', [BookController::class, 'store']);
 Route::delete('/Book/{id}', [BookController::class, 'delete']);
