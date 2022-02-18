@@ -16,7 +16,7 @@ class JwtMiddleware extends BaseMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$types)
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
@@ -32,6 +32,14 @@ class JwtMiddleware extends BaseMiddleware
                 return response()->json(['status' => 'Authorizarion Token not found']);
             }
         }
-        return $next($request);
+
+        // return compact($user);
+
+        if($user && in_array($user->type, $types)){
+            return $next($request);
+        }else {
+            return response()->json(["Invalid role, your role", $user->type]);
+        }
+        
     }
 }

@@ -28,7 +28,7 @@ class UserController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Succes login!',
-            'token' => compact('token'),
+            'token' => $token,
             'data' => $data
         ]);
     }
