@@ -52,7 +52,11 @@ class StudentsController extends Controller
 
     //read data start
     public function show(){
-        return Students::all();
+        $data = DB::table('students')
+                ->select('students.student_id', 'students.student_name', 'grade.class_name', 'grade.group')
+                ->join('grade', 'grade.class_id', '=', 'students.class_id')
+                ->get();
+        return Response()->json($data);          
     }
 
     public function detail($id){

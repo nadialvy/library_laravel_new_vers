@@ -9,6 +9,7 @@ use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\BookBorrowController;
 use App\Http\Controllers\BookReturnController;
 use App\Http\Controllers\BookBorrowDetailsController;
+use App\Http\Controllers\transactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,11 +26,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//test vue
+// Route::post('/Students', [StudentsController::class, 'store']);
+// Route::get('/Students', [StudentsController::class, 'show']);
+// Route::delete('/Students/{id}', [StudentsController::class, 'delete']);
+
+//transaction
+Route::post('/bookBorrow', [transactionController::class, 'BookBorrow']);
+Route::post('/detailBorrow/{id}', [transactionController::class, 'detailBorrow']);
+Route::post('/bookReturn', [transactionController::class, 'bookReturn']);
+
+
 //LOGIN REGISTER
 Route::post('/Register', [UserController::class, 'register']);
 Route::post('/Login', [UserController::class, 'login']);
 
 Route::group(['middleware' => ['jwt.verify:2, 1, 0']], function(){
+
+Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
 
     Route::group(['middleware' => ['jwt.verify:2']], function(){
         Route::post('/Book', [BookController::class, 'store']);
