@@ -10,13 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
-    //greet user
-    public function bookAuth(){
-        $data = "Welcome " . Auth::user()->name;
-        return response()->json($data, 200);
-    }
-    //greet user end
-
+    
     //create data start
     public function store(Request $request)
     {
@@ -38,7 +32,7 @@ class BookController extends Controller
             'desc' => $request->desc
         ]);
 
-        $data = Book::where('book_name', '=', $request->book_name)-> get();
+        $data = Book::where('book_name', '=', $request->book_name)->get();
         if($store){
             return Response() -> json([
                 'status' => 1,
@@ -55,6 +49,49 @@ class BookController extends Controller
     }
     //create data end
 
+    //upload book cover
+    public function upload_book_cover(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'book_cover' => 'required|file|mimes:jpeg,png,jpg,jfif|max:2048'
+            ]
+        );
+
+        if($validator -> fails()) {
+            return Response() -> json($validator->errors());
+        }
+
+        //rename book_cover to unique name
+        $book_cover_name = time().'.'.$request->book_cover->extension();
+
+        //process upload
+        $request->book_cover->move(public_path('images'), $book_cover_name);
+ 
+        $store=DB::table('book')
+                ->where('book_id', '=', $id)
+                ->update([
+                    'image' =>$book_cover_name
+                ]);
+
+        $data = Book::where('book_id', '=', $request->$id)-> get();
+        if($store){
+            return Response() -> json([
+                'status' => 1,
+                'message' => 'Succes upload book cover!',
+                'data' => $data
+            ]);
+        } else 
+        {
+            return Response() -> json([
+                'status' => 0,
+                'message' => 'Failed upload book cover!'
+            ]);
+        }
+    }
+    //create data end
+
+
     //read data start
     public function show(){
         return Book::all();
@@ -63,10 +100,10 @@ class BookController extends Controller
     public function detail($id){
         if(DB::table('book')->where('book_id', $id)->exists()){
             $detail_book = DB::table('book')
-            ->select('book.*')
-            ->where('book_id', $id)
-            ->get();
-            return Response()->json($detail_book);
+                            ->select('book.*')
+                            ->where('book_id', $id)
+                            ->get();
+                            return Response()->json($detail_book);
         }else {
             return Response()->json(['message' => 'Couldnt find the data']);
         }

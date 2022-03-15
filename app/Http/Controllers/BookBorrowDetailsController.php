@@ -10,10 +10,9 @@ use Illuminate\Support\Facades\DB;
 class BookBorrowDetailsController extends Controller
 {
     //create data start
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         $validator = Validator::make($request->all(),[
-            'book_borrow_id' => 'required',
             'book_id' => 'required',
             'qty' => 'required'
         ]);
@@ -23,12 +22,12 @@ class BookBorrowDetailsController extends Controller
         }
 
         $store = BookBorrowDetails::create([
-            'book_borrow_id' => $request->book_borrow_id,
+            'book_borrow_id' => $id,
             'book_id' => $request->book_id,
             'qty' => $request->qty
         ]);
 
-        $data = BookBorrowDetails::where('book_borrow_id', '=', $request->book_borrow_id)->get();
+        $data = BookBorrowDetails::where('book_borrow_id', '=', $id)->first();
         if($store){ 
             return Response()->json([
                 'status' => 1,
@@ -46,7 +45,11 @@ class BookBorrowDetailsController extends Controller
 
     //read data start
     public function show(){
-        return BookBorrowDetails::all();
+        $data = DB::table('book_borrow_details')
+        ->select('book_borrow_details.*', 'book.book_name')
+        ->join('book', 'book.book_id', '=', 'book_borrow_details.book_id')
+        ->get();
+        return Response()->json($data);
     }
 
     public function detail($id){

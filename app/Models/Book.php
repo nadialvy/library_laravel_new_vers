@@ -9,5 +9,5 @@ class Book extends Model
     protected $table = 'book';
     public $timestamps = true;
 
-    protected $fillable = ['book_name', 'author', 'desc'];
+    protected $fillable = ['book_name', 'author', 'desc', 'image'];
 }

@@ -31,12 +31,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::get('/Students', [StudentsController::class, 'show']);
 // Route::delete('/Students/{id}', [StudentsController::class, 'delete']);
 
-//transaction
-Route::post('/bookBorrow', [transactionController::class, 'BookBorrow']);
-Route::post('/detailBorrow/{id}', [transactionController::class, 'detailBorrow']);
-Route::post('/bookReturn', [transactionController::class, 'bookReturn']);
-
-
 //LOGIN REGISTER
 Route::post('/Register', [UserController::class, 'register']);
 Route::post('/Login', [UserController::class, 'login']);
@@ -47,6 +41,8 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
 
     Route::group(['middleware' => ['jwt.verify:2']], function(){
         Route::post('/Book', [BookController::class, 'store']);
+        Route::post('/Book/UploadCover/{id}', [BookController::class, 'upload_book_cover']);
+
         Route::delete('/Book/{id}', [BookController::class, 'delete']);
         Route::delete('/Students/{id}', [StudentsController::class, 'delete']);
         Route::delete('/Grade/{id}', [GradeController::class, 'delete']);
@@ -73,6 +69,11 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
 
         Route::post('/BookBorrowDetails', [BookBorrowDetailsController::class, 'store']);
         Route::put('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'update']);    
+
+        //transaction   
+        // Route::post('/bookBorrow', [transactionController::class, 'BookBorrow']);
+        // Route::post('/detailBorrow/{id}', [transactionController::class, 'detailBorrow']);
+        // Route::post('/bookReturn', [transactionController::class, 'bookReturn']);
     });
 
     Route::group(['middleware' => ['jwt.verify:2,1,0']], function(){

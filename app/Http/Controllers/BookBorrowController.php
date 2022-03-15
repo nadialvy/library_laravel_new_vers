@@ -22,13 +22,15 @@ class BookBorrowController extends Controller
             return Response() -> json($validator->errors());
         }
 
+        //store input data to database
         $store = BookBorrow::create([
             'student_id' => $request->student_id,
             'date_of_borrowing' => $request->date_of_borrowing,
             'date_of_returning' => $request->date_of_returning
         ]);
 
-        $data = BookBorrow::where('student_id', '=', $request->student_id)->get();
+        //make a nice return form 
+        $data = BookBorrow::where('student_id', '=', $request->student_id)->first();
         if($store){
             return Response() -> json([
                 'status' => 1,
@@ -47,7 +49,11 @@ class BookBorrowController extends Controller
 
     //read data start
     public function show(){
-        return BookBorrow::all();
+        $data = DB::table('book_borrow')
+        ->select('book_borrow.book_borrow_id', 'book_borrow.student_id', 'students.student_name', 'book_borrow.date_of_borrowing', 'book_borrow.date_of_returning')
+        ->join('students', 'students.student_id', '=', 'book_borrow.student_id')
+        ->get(); 
+        return Response()->json($data);
     }
 
     public function detail($id){
