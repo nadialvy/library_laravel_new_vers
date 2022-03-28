@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookBorrow;
+use App\Models\BookBorrowDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -15,27 +16,37 @@ class BookBorrowController extends Controller
         $validator = Validator::make($request->all(), [
             'student_id' => 'required',
             'date_of_borrowing' => 'required',
-            'date_of_returning'  => 'required'
+            'date_of_returning'  => 'required',
         ]);
 
         if($validator->fails()){
             return Response() -> json($validator->errors());
         }
 
-        //store input data to database
-        $store = BookBorrow::create([
-            'student_id' => $request->student_id,
-            'date_of_borrowing' => $request->date_of_borrowing,
-            'date_of_returning' => $request->date_of_returning
-        ]);
+        //insert borrow
+        $borrow = new BookBorrow();
+        $borrow->student_id = $request->student_id;
+        $borrow->date_of_borrowing = $request->date_of_borrowing;
+        $borrow->date_of_returning = $request->date_of_returning;
+        $borrow->save();
 
-        //make a nice return form 
-        $data = BookBorrow::where('student_id', '=', $request->student_id)->first();
-        if($store){
+        //insert detail
+        for($i = 0; $i < count($request->detail); $i++){
+            $detail = new BookBorrowDetails();
+            $detail->book_borrow_id = $borrow->book_borrow_id;
+            $detail->book_id = $request->detail[$i]['book_id'];
+            $detail->qty = $request->detail[$i]['qty'];
+            $detail->save();
+        }
+
+        $dataBook = BookBorrow::where('book_borrow_id', $borrow->book_borrow_id)->first();
+        $dataDetails = BookBorrowDetails::where('book_borrow_id', $borrow->book_borrow_id)->get();
+        if($borrow && $detail){
             return Response() -> json([
                 'status' => 1,
                 'message' => 'Succes create new data!',
-                'data' => $data
+                'data borrow' => $dataBook,
+                'detail borrow' => $dataDetails
             ]);
         }else
         {

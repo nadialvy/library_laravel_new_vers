@@ -9,5 +9,5 @@ class Students extends Model
     protected $table = 'students'; //$table menyimpan informasi nama tabel customers
     public $timestamps = true;
 
-    protected $fillable = ['student_name', 'date_of_birth', 'gender', 'address', 'class_id'];
+    protected $fillable = ['student_name', 'image', 'date_of_birth', 'gender', 'address', 'class_id'];
 }

@@ -48,6 +48,45 @@ class StudentsController extends Controller
             ]);
         }
     }
+
+    public function upload_photo(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), 
+        [
+            'student_photo' => 'required|file|mimes:jpeg,png,jpg,jfif|max:2048'
+        ]);
+
+        if($validator -> fails()){
+            return Response() -> json($validator -> errors());
+        }
+
+        //rename book_cover to unique name
+        $student_photo_name = time().'.'.$request->student_photo->extension();
+
+        //process upload
+        $request->student_photo->move(public_path('student_images'), $student_photo_name);
+
+        $store=DB::table('students')
+                ->where('student_id', '=', $id)
+                ->update([
+                    'image' =>$student_photo_name
+                ]);
+
+        $data = Students::where('student_id', '=', $request->$id)-> get();
+        if($store){
+            return Response() -> json([
+                'status' => 1,
+                'message' => 'Succes upload student photo!',
+                'data' => $data
+            ]);
+        } else 
+        {
+            return Response() -> json([
+                'status' => 0,
+                'message' => 'Failed upload student photo!'
+            ]);
+        }
+    }
     //create data end
 
     //read data start

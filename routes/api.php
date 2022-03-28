@@ -44,7 +44,10 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
         Route::post('/Book/UploadCover/{id}', [BookController::class, 'upload_book_cover']);
 
         Route::delete('/Book/{id}', [BookController::class, 'delete']);
+    
         Route::delete('/Students/{id}', [StudentsController::class, 'delete']);
+        Route::post('/Students/UploadCover/{id}', [StudentsController::class, 'upload_photo']);
+
         Route::delete('/Grade/{id}', [GradeController::class, 'delete']);
         Route::delete('/BookBorrow/{id}', [BookBorrowController::class, 'delete']);
         Route::delete('/BookReturn/{id}', [BookReturnController::class, 'delete']);
