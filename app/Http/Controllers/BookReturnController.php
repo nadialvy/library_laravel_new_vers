@@ -25,12 +25,12 @@ class BookReturnController extends Controller
         if($borrowCheck->count() == false){
             $data_borrow = BookBorrow::where('book_borrow_id', '=', $request -> book_borrow_id)->first(); 
             
-            $date_of_returning = Carbon::parse($data_borrow->date_of_returning);
-            $current_date = Carbon::parse(date('Y-m-d'));            
+            $date_of_returning = Carbon::parse($data_borrow->date_of_returning); //parse date returnng from db to carbon
+            $current_date = Carbon::parse(date('Y-m-d')); //get current date
 
-            $fine_per_day = 1500;
+            $fine_per_day = 2000; //initialize fine pe day
 
-            if(strtotime($current_date) > strtotime($date_of_returning)){ 
+            if(strtotime($current_date) > strtotime($date_of_returning)){ //check if current date is greater than date of returning
                 $total_days = $date_of_returning->diffInDays($current_date);
                 $fine = $total_days * $fine_per_day;
             } else {
@@ -44,6 +44,11 @@ class BookReturnController extends Controller
             ]);
 
             $data = BookReturn::where('book_borrow_id', '=', $request->book_borrow_id)->first();
+            if(strtotime($current_date) > strtotime($date_of_returning)){ //check if current date is greater than date of returning
+                $total_days = $date_of_returning->diffInDays($current_date);
+            } else {
+                $total_days = 0;
+            }
             if($store){
                 $data_return = ([
                     'status' => 1,
@@ -72,20 +77,31 @@ class BookReturnController extends Controller
 
     //read data start
     public function show(){
-        return BookReturn::all();
+        $data = DB::table('book_return')
+        ->select('book_return.*', 'students.student_name', 'grade.class_name')
+        ->join('book_borrow', 'book_borrow.book_borrow_id', '=', 'book_return.book_borrow_id')
+        ->join('students', 'students.student_id', '=', 'book_borrow.student_id')
+        ->join('grade', 'grade.class_id', '=', 'students.class_id')
+        ->get();
+
+        return Response()->json($data);
     }
 
     public function detail($id){
-        if(DB::table('book_return')->where('book_return_id', $id)->exists()){
-            $detail = DB::table('book_return')
-            ->select('book_return.*')
-            ->join('book_borrow', 'book_borrow.book_borrow_id', '=', 'book_return.book_borrow_id')
-            ->where('book_return_id', $id)
-            ->get();
-            return Response()->json($detail);
+        if(DB::table('book_borrow')->where('book_borrow_id', $id)->exists()){ //id 30
+            $detail = DB::table('book_borrow')
+            ->select( 'book_return.*')
+            ->join('book_return', 'book_return.book_borrow_id', '=', 'book_borrow.book_borrow_id')
+            ->where('book_borrow.book_borrow_id', $id)
+            ->first();
+
+            return Response()->json([
+                $detail
+            ]);
         }else{
             return Response()->json(['message' => 'Couldnt find the data']);
         }
+    
     }
     //read data end
 

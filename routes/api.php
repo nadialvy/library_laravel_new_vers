@@ -51,7 +51,7 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
         Route::delete('/Grade/{id}', [GradeController::class, 'delete']);
         Route::delete('/BookBorrow/{id}', [BookBorrowController::class, 'delete']);
         Route::delete('/BookReturn/{id}', [BookReturnController::class, 'delete']);
-        Route::delete('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'delete']);
+        // Route::delete('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'delete']);
     });
 
     Route::group(['middleware' => ['jwt.verify:2, 1']], function(){
@@ -70,8 +70,8 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
         Route::post('/BookReturn', [BookReturnController::class, 'store']);
         Route::put('/BookReturn/{id}', [BookReturnController::class, 'update']);
 
-        Route::post('/BookBorrowDetails', [BookBorrowDetailsController::class, 'store']);
-        Route::put('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'update']);    
+        // Route::post('/BookBorrowDetails', [BookBorrowDetailsController::class, 'store']);
+        // Route::put('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'update']);    
 
         //transaction   
         // Route::post('/bookBorrow', [transactionController::class, 'BookBorrow']);
@@ -95,9 +95,12 @@ Route::get('/LoginCheck', [UserController::class, 'getAuthenticatedUser']);
         Route::get('/BookReturn', [BookReturnController::class, 'show']);
         Route::get('/BookReturn/{id}', [BookReturnController::class, 'detail']);
         
-        Route::get('/BookBorrowDetails', [BookBorrowDetailsController::class, 'show']);
+        // Route::get('/BookBorrowDetails', [BookBorrowDetailsController::class, 'show']);
         Route::get('/BookBorrowDetails/{id}', [BookBorrowDetailsController::class, 'detail']);
-       
+
+        Route::get('/detailReturn/{id}', [BookBorrowController::class, 'detailReturn']);
+        Route::get('/checkStatus/{id}', [BookBorrowController::class, 'checkStatus']);
+
     });
 
 });
