@@ -95,6 +95,8 @@ class StudentsController extends Controller
                 ->select('students.*', 'grade.class_name', 'grade.group')
                 ->join('grade', 'grade.class_id', '=', 'students.class_id')
                 ->get();
+
+        // $data = Students::with(['grade'])->where('students.class_id', '=', 'grade.class_id')->get();
         return Response()->json($data);          
     }
 
