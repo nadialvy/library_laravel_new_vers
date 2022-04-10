@@ -73,18 +73,7 @@ class BookBorrowController extends Controller
         })
         ->orderBy('book_borrow_id')
         ->get();
-        // return Response() -> json([
-        //     'data' => $data
-        // ]);
-
-        $data = DB::table('book_borrow')
-        ->select('book_borrow.*', 'students.student_name')
-        ->join('students', 'students.student_id', 'book_borrow.student_id')
-        ->rightJoin('book_return', 'book_borrow.book_borrow_id', 'book_return.book_borrow_id')
-        ->orderBy('book_borrow_id')
-        ->get();
-
-        // return Response()->json($data);
+        
         $result = [];
         for($i = 0; $i < count($data); $i++){
             $result[$i]['student_name'] = $data[$i]->student_name;
