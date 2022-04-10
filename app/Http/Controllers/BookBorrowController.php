@@ -112,7 +112,7 @@ class BookBorrowController extends Controller
     public function detailReturn($id){
         if(DB::table('book_borrow')->where('book_borrow_id', $id)->exists()){
             $data_borrow = BookBorrow::where('book_borrow_id', '=', $id)->first(); 
-            return Response()->json($data_borrow);
+            // return Response()->json($data_borrow);
             
             $date_of_returning = Carbon::parse($data_borrow->date_of_returning); //parse date returnng from db to carbon
             $current_date = Carbon::parse(date('Y-m-d')); //get current date
