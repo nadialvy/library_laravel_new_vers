@@ -82,6 +82,7 @@ class BookReturnController extends Controller
         ->join('book_borrow', 'book_borrow.book_borrow_id', '=', 'book_return.book_borrow_id')
         ->join('students', 'students.student_id', '=', 'book_borrow.student_id')
         ->join('grade', 'grade.class_id', '=', 'students.class_id')
+        ->orderBy('book_return_id')
         ->get();
 
         return Response()->json($data);

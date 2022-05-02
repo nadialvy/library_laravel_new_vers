@@ -16,8 +16,6 @@ class BookBorrowController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'student_id' => 'required',
-            // 'date_of_borrowing' => 'required',
-            // 'date_of_returning'  => 'required',
             'detail' => 'required',
         ]);
 
@@ -30,8 +28,6 @@ class BookBorrowController extends Controller
         $borrow->student_id = $request->student_id;
         $borrow->date_of_borrowing = Carbon::now();
         $borrow->date_of_returning = Carbon::now()->addDays(7);
-        // $borrow->date_of_borrowing = $request->date_of_borrowing;
-        // $borrow->date_of_returning = $request->date_of_returning;
         $borrow->save();
 
         //insert detail
@@ -124,16 +120,18 @@ class BookBorrowController extends Controller
                 $fine = $total_days * $fine_per_day;
 
                 return Response()->json([[
+                    'book_borrow_id' => $id,
                     'fine' => $fine,
                     'late_for' =>$total_days
                 ]]);
             } else {
                 $fine = 0;
 
-                return Response()->json([
+                return Response()->json([[
+                    'book_borrow_id' => $id,
                     'fine' => $fine,
-                    'late for' => 'Not late'
-                ]);
+                    'late for' => 0
+                ]]);
             }
         }else {
             return Response()->json(['message' => 'Couldnt find the data']);

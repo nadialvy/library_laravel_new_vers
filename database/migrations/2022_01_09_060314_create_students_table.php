@@ -20,6 +20,7 @@ class CreateStudentsTable extends Migration
             $table->enum('gender', ['L', 'P']);
             $table->text('address');
             $table->unsignedBigInteger('class_id');
+            $table->string('image')->nullable();
             $table->timestamps();
 
             $table->foreign('class_id')->references('class_id')->on('grade');
